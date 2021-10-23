@@ -1,38 +1,65 @@
 import type {GetServerSideProps, NextPage} from 'next'
-import {Button, Divider, Stack} from "@mui/material";
-import Link from "next/link";
-import Head from "next/head";
+import {Button, Stack} from "@mui/material";
+import HeadMetaData from "../components/HeadMetaData";
+import Image from "next/image"
+import {PhotoDto} from "../data/api/photo/dto/photoDto";
+import {fetchPhotos} from "../data/api/photo/PhotoApi";
+import {useRouter} from "next/router";
+import {RoutePath} from "../route/RoutePath";
 
-const Home: NextPage<{ id: number }> = ({id}) => {
+type HomeProps = {
+    photos: PhotoDto[]
+}
+
+const Home: NextPage<HomeProps> = (
+    {photos}
+) => {
+    const router = useRouter()
+
+    const handlePhotoClick = (id: number) => {
+        router.push({
+            pathname: RoutePath.DETAIL,
+            query: {id}
+        })
+    }
+
+    //
+
+    const renderPhotos =
+        photos.map(({id, thumbnailUrl}) => {
+            return (
+                <Button
+                    key={id}
+                    onClick={() => handlePhotoClick(id)}
+                >
+                    <Image
+                        src={thumbnailUrl}
+                        width={100}
+                        height={100}
+                    />
+                </Button>
+            )
+        })
+
     return (
         <Stack aria-label={"test section"}>
-            <Head>
-                <title>Title Test 123</title>
-                <meta
-                    name={"viewport"}
-                    content={"initial-scale=1.0, width=device-width"}
-                />
-                <meta
-                    property={"og:title"}
-                    content={"my page title"}
-                    key={"title"}
-                />
-            </Head>
-            <Divider/>
+            <HeadMetaData title={"home"}/>
 
-            <Link href={`/detail?id=${id}`}>
-                <Button variant={"outlined"}>
-                    {id}
-                </Button>
-            </Link>
+            <div>
+                {renderPhotos}
+            </div>
         </Stack>
     )
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    console.log("server?")
+    const res = await fetchPhotos(5)
+    const photos: PhotoDto[] = res.data
+
     return {
-        props: {"id": 8}
+        props: {
+            photos
+        }
     }
 }
 

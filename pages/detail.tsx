@@ -1,5 +1,6 @@
 import {Button, Stack} from "@mui/material";
 import {useRouter} from "next/router";
+import HeadMetaData from "../components/HeadMetaData";
 
 const detail = () => {
     const router = useRouter()
@@ -12,6 +13,8 @@ const detail = () => {
 
     return <>
         <Stack>
+            <HeadMetaData/>
+
             <Button onClick={handleBtnClick}>
                 {`Detail ${id}`}
             </Button>
