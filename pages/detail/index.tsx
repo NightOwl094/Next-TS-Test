@@ -1,10 +1,9 @@
 import {Button, Stack} from "@mui/material";
 import {useRouter} from "next/router";
-import HeadMetaData from "../components/HeadMetaData";
+import HeadMetaData from "../../components/HeadMetaData";
 
-const detail = () => {
+const index = () => {
     const router = useRouter()
-    console.log(router.query)
     const {id} = router.query
 
     const handleBtnClick = () => {
@@ -22,4 +21,4 @@ const detail = () => {
     </>
 }
 
-export default detail
+export default index
